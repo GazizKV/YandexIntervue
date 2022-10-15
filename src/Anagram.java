@@ -1,5 +1,5 @@
 import java.io.*;
-import java.util.Arrays;
+import java.util.HashMap;
 
 public class Anagram {
 
@@ -16,31 +16,36 @@ public class Anagram {
     }
 
     public static void main(String[] args) throws IOException {
+        String abc = "abcdefghijklmnopqrstuvwxyz";
 
-        bufferedReader.mark(0);
-        int next;
-        Integer[] firstMatrix = new Integer[256];
-        Arrays.fill(firstMatrix, 0);
-        Integer[] secondMatrix = new Integer[256];
-        Arrays.fill(secondMatrix, 0);
-
-        while (bufferedReader.ready()) {
-            next = bufferedReader.read();
-            if (next == 13) {
-                break;
-            }
-            firstMatrix[next]++;
+        HashMap<Character, Integer> map1 = new HashMap<>();
+        for (int i = 0; i < 26; i++) {
+            map1.put(abc.charAt(i), 0);
         }
-        bufferedReader.skip(1);
-        while (bufferedReader.ready()) {
-            next = bufferedReader.read();
-            if (next == 13) {
-                break;
-            }
-            secondMatrix[next]++;
+        HashMap<Character, Integer> map2 = new HashMap<>();
+        for (int i = 0; i < 26; i++) {
+            map2.put(abc.charAt(i), 0);
         }
 
-        if (Arrays.equals(firstMatrix, secondMatrix)) {
+        char nextChar;
+        String next;
+        while (bufferedReader.ready()) {
+            nextChar = (char) bufferedReader.read();
+            if (nextChar == 13) {
+                break;
+            }
+            map1.put(nextChar, map1.get(nextChar) + 1);
+        }
+        bufferedReader.read();
+        while (bufferedReader.ready()) {
+            nextChar = (char) bufferedReader.read();
+            if (nextChar == 13) {
+                break;
+            }
+            map2.put(nextChar, map2.get(nextChar) + 1);
+        }
+
+        if (map1.equals(map2)) {
             bufferedWriter.write("1");
         } else {
             bufferedWriter.write("0");
