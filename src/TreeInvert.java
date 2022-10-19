@@ -12,12 +12,11 @@ public class TreeInvert {
 
         String[] inputStr = reader.readLine().split(" ");
         int N = Integer.parseInt(inputStr[0]);
-        int Q = Integer.parseInt(inputStr[1]);
 
         int[] nodesToSwap = Arrays.stream(reader.readLine().split(" "))
                 .mapToInt(Integer::parseInt).toArray();
         Node[] nodes = new Node[N];
-        int nextRoot = 0;
+        int nextRoot;
 
         for (int i = 0; i < N / 2; i++) {
             nextRoot = i + 1;
@@ -49,12 +48,10 @@ public class TreeInvert {
                 nodes[i].right.ancestor = nodes[i];
             }
         }
-        int asdf = 0;
-        for (int i = 0; i < nodesToSwap.length; i++) {
+        for (int nodeData : nodesToSwap) {
             deepCrawl(rootNode);
             System.out.print("\n");
-//            rearrangingIntoArray(nodes, rootNode, 0);
-            findAndSwap(nodesToSwap[i]);
+            findAndSwap(nodeData);
         }
 
 
@@ -63,75 +60,62 @@ public class TreeInvert {
 
     }
 
-    private static void rearrangingIntoArray(Node[] nodes, Node rootNode, int i) {
-        if (rootNode == null) {
-            return;
-        }
-        nodes[i++] = rootNode;
-        rearrangingIntoArray(nodes, rootNode.left, i);
-        rearrangingIntoArray(nodes, rootNode.right, i);
-    }
-
     private static void findAndSwap(int nodeData) {
-        int adfasdfsa = 0;
         Node toSwap = findNode(rootNode, nodeData);
-        if (null == toSwap) {
-            System.out.println("Node " + nodeData + " not found");
+        if (null == toSwap || toSwap.isRoot) {
             return;
         }
-        if (toSwap.isRoot) {
-            return;
+        if (toSwap.ancestor.left.data == toSwap.data) {
+            Node ancestor = toSwap.ancestor;
+            Node ancestorOfAncestor = ancestor.ancestor;
+            Node left = toSwap.left;
+
+            toSwap.left = ancestor;
+            toSwap.ancestor = ancestorOfAncestor;
+            if (null != ancestorOfAncestor && ancestorOfAncestor.left.data == ancestor.data) {
+                ancestorOfAncestor.left = toSwap;
+            } else if (null != ancestorOfAncestor) {
+                ancestorOfAncestor.right = toSwap;
+            }
+
+            ancestor.ancestor = toSwap;
+            ancestor.left = left;
+            if (null != left) {
+                left.ancestor = ancestor;
+            }
+            if (ancestor.isRoot) {
+                ancestor.isRoot = false;
+                toSwap.isRoot = true;
+                rootNode = toSwap;
+            }
         } else {
-            if (toSwap.ancestor.left.data == toSwap.data) {
-                Node ancestor = toSwap.ancestor;
-                Node ancestorOfAncestor = ancestor.ancestor;
-                Node left = toSwap.left;
+            Node ancestor = toSwap.ancestor;
+            Node ancestorOfAncestor = ancestor.ancestor;
+            Node right = toSwap.right;
 
-                toSwap.left = ancestor;
-                toSwap.ancestor = ancestorOfAncestor;
-                if (null != ancestorOfAncestor && ancestorOfAncestor.left.data == ancestor.data) {
-                    ancestorOfAncestor.left = toSwap;
-                } else {
-                    ancestorOfAncestor.right = toSwap;
-                }
+            toSwap.right = ancestor;
+            toSwap.ancestor = ancestorOfAncestor;
+            if (null != ancestorOfAncestor && ancestorOfAncestor.left.data == ancestor.data) {
+                ancestorOfAncestor.left = toSwap;
+            } else if (null != ancestorOfAncestor) {
+                ancestorOfAncestor.right = toSwap;
 
-                ancestor.ancestor = toSwap;
-                ancestor.left = left;
-                if (null != left) {
-                    left.ancestor = ancestor;
-                }
-                if (ancestor.isRoot) {
-                    ancestor.isRoot = false;
-                    toSwap.isRoot = true;
-                }
-            } else {
-                Node ancestor = toSwap.ancestor;
-                Node ancestorOfAncestor = ancestor.ancestor;
-                Node right = toSwap.right;
+            }
 
-                toSwap.right = ancestor;
-                toSwap.ancestor = ancestorOfAncestor;
-                if (null != ancestorOfAncestor && ancestorOfAncestor.left.data == ancestor.data) {
-                    ancestorOfAncestor.left = toSwap;
-                } else {
-                    ancestorOfAncestor.right = toSwap;
-                }
-
-                ancestor.ancestor = toSwap;
-                ancestor.right = right;
-                if (null != right) {
-                    right.ancestor = ancestor;
-                }
-                if (ancestor.isRoot) {
-                    ancestor.isRoot = false;
-                    toSwap.isRoot = true;
-                }
+            ancestor.ancestor = toSwap;
+            ancestor.right = right;
+            if (null != right) {
+                right.ancestor = ancestor;
+            }
+            if (ancestor.isRoot) {
+                ancestor.isRoot = false;
+                toSwap.isRoot = true;
+                rootNode = toSwap;
             }
         }
     }
 
     private static Node findNode(Node rootNode, int nodeData) {
-        int asdf = 0;
         Node result;
 
         if (null == rootNode) return null;
