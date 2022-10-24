@@ -11,7 +11,7 @@ public class validParentheses {
             if (next.equals("(")) result++;
             else if (next.equals(")")) result--;
             if (result < 0) return false;
-            return result == 0;
         }
+        return result == 0;
     }
 }
