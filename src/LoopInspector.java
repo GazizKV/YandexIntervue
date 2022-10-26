@@ -22,4 +22,12 @@ public class LoopInspector {
             node = next;
         }
     }
+
+    public static class Node {
+
+        public Node getNext() {
+            return null;
+        }
+    }
+
 }
